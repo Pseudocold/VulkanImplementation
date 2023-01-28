@@ -22,3 +22,8 @@ struct SwapChainDetails {
 	std::vector<VkSurfaceFormatKHR> formats;				// surface image formats e.g. RGBA and size of each color
 	std::vector<VkPresentModeKHR> presentationModes;		// how images should be presented to screen
 };
+
+struct SwapchainImage {
+	VkImage image;
+	VkImageView imageView;
+};
