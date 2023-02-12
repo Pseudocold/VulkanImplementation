@@ -22,7 +22,7 @@ public:
 
 	int init(GLFWwindow* newWindow);
 
-	void updateModel(glm::mat4 newModel);
+	void updateModel(int modelId, glm::mat4 newModel);
 
 	void draw();
 	void cleanup(); // whenever the vkCreate*() is called, there also needs a destroy function to be called in cleanup()
@@ -38,11 +38,10 @@ private:
 	std::vector<Mesh> meshList;
 
 	//Scene Settings
-	struct MVP {
+	struct UboViewProjection {
 		glm::mat4 projection;
 		glm::mat4 view;
-		glm::mat4 model;
-	}mvp;
+	} uboViewProjection;
 
 	//Vulkan components
 	// - Main
@@ -66,8 +65,15 @@ private:
 	VkDescriptorPool descriptorPool;						// where the descriptor sets will be allocated
 	std::vector<VkDescriptorSet> descriptorSets;	// 
 
-	std::vector<VkBuffer> uniformBuffer;					// the raw data that descriptor will point to and describe
-	std::vector<VkDeviceMemory> uniformBufferMemory;
+	std::vector<VkBuffer> vpUniformBuffer;					// the raw data that descriptor will point to and describe
+	std::vector<VkDeviceMemory> vpUniformBufferMemory;
+
+	std::vector<VkBuffer> mDynamicUniformBuffer;					// the raw data that descriptor will point to and describe
+	std::vector<VkDeviceMemory> mDynamicUniformBufferMemory;
+
+	VkDeviceSize minUniformBufferOffset;
+	size_t modelUniformAlignment;
+	UboModel* modelTransferSpace;
 
 	// - Pipeline
 	VkPipeline graphicsPipeline;
@@ -82,6 +88,7 @@ private:
 	// - Utility
 	VkFormat swapChainImageFormat;
 	VkExtent2D swapChainExtent;
+
 
 	// - Synchronization
 	std::vector<VkSemaphore> imageAvailable;
@@ -106,13 +113,16 @@ private:
 	void createDescriptorPool();
 	void createDescriptorSets();
 
-	void updateUniformBuffer(uint32_t imageIndex);
+	void updateUniformBuffers(uint32_t imageIndex);
 
 	// - record functions
 	void recordCommands();
 
 	// - get functions
 	void getPhysicalDevice();
+
+	// - allocate functions
+	void allocateDynamicBufferTransferSpace();
 
 	// - support functions
 	// -- checker functions
