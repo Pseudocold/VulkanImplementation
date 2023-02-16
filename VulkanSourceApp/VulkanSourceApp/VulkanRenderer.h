@@ -61,6 +61,7 @@ private:
 
 	// - Descriptor
 	VkDescriptorSetLayout descriptorSetLayout;		// how descripor be laid out on a shader
+	VkPushConstantRange pushConstantRange;
 
 	VkDescriptorPool descriptorPool;						// where the descriptor sets will be allocated
 	std::vector<VkDescriptorSet> descriptorSets;	// 
@@ -71,9 +72,9 @@ private:
 	std::vector<VkBuffer> mDynamicUniformBuffer;					// the raw data that descriptor will point to and describe
 	std::vector<VkDeviceMemory> mDynamicUniformBufferMemory;
 
-	VkDeviceSize minUniformBufferOffset;
-	size_t modelUniformAlignment;
-	UboModel* modelTransferSpace;
+	//VkDeviceSize minUniformBufferOffset;
+	//size_t modelUniformAlignment;
+	//Model* modelTransferSpace;
 
 	// - Pipeline
 	VkPipeline graphicsPipeline;
@@ -103,6 +104,7 @@ private:
 	void createSwapChain();
 	void createRenderPass();
 	void createDescriptorSetLayout();
+	void createPushConstantRange();
 	void createGraphicsPipeline();
 	void createFramebuffers();
 	void createCommandPool();
@@ -116,13 +118,13 @@ private:
 	void updateUniformBuffers(uint32_t imageIndex);
 
 	// - record functions
-	void recordCommands();
+	void recordCommands(uint32_t currentImage);
 
 	// - get functions
 	void getPhysicalDevice();
 
 	// - allocate functions
-	void allocateDynamicBufferTransferSpace();
+	//void allocateDynamicBufferTransferSpace();
 
 	// - support functions
 	// -- checker functions
