@@ -65,12 +65,17 @@ private:
 	VkDeviceMemory depthBufferImageMemory;
 	VkImageView depthBufferImageView;
 
+	VkSampler textureSampler;			// not really a asset, just describes how a image should be read
+
 	// - Descriptor
 	VkDescriptorSetLayout descriptorSetLayout;		// how descripor be laid out on a shader
+	VkDescriptorSetLayout samplerSetLayout;
 	VkPushConstantRange pushConstantRange;
 
 	VkDescriptorPool descriptorPool;						// where the descriptor sets will be allocated
-	std::vector<VkDescriptorSet> descriptorSets;	// 
+	VkDescriptorPool samplerDescriptorPool;
+	std::vector<VkDescriptorSet> descriptorSets;	// for view projection matrices of swapchain images
+	std::vector<VkDescriptorSet> samplerDescriptorSets; // for textures
 
 	std::vector<VkBuffer> vpUniformBuffer;					// the raw data that descriptor will point to and describe
 	std::vector<VkDeviceMemory> vpUniformBufferMemory;
@@ -85,6 +90,7 @@ private:
 	// - Assets
 	std::vector<VkImage> textureImages;
 	std::vector<VkDeviceMemory> textureImageMemory;
+	std::vector<VkImageView> textureImageViews;
 
 	// - Pipeline
 	VkPipeline graphicsPipeline;
@@ -121,6 +127,7 @@ private:
 	void createCommandPool();
 	void createCommandBuffers();
 	void createSynchronization();
+	void createTextureSampler();
 
 	void createUniformBuffers();
 	void createDescriptorPool();
@@ -158,7 +165,9 @@ private:
 	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
 	VkShaderModule createShaderModule(const std::vector<char>& code);
 
+	int createTextureImage(std::string fileName);
 	int createTexture(std::string fileName);
+	int createTextureDescriptor(VkImageView textureImage);
 
 	// -- loader functions
 	stbi_uc* loadTextureFile(std::string fileName, int* width, int* height, VkDeviceSize* imageSize);
